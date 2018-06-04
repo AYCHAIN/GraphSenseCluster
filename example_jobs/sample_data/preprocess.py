@@ -20,7 +20,5 @@ for line in fileinput.input():
         n.append(e)
     if i % 10000 == 0:
         print("Line {}, {} addrs so far".format(i, len(hashes)), file=sys.stderr)
-    if (len(n) > 0):
+    if (len(n) > 1):
         print(",".join(str(index) for index in n))
-
-
