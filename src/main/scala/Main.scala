@@ -13,8 +13,9 @@ object Main extends App {
       Set(1, 2, 3),
       Set(4, 5, 6),
       Set(7, 8, 9),
-      Set(3, 4)
-    )
+      Set(3, 4)).toIterator
+    // .map(_.toIterator)
+    // .toIterator
     println(" " + input_sets)
 
     // Clustering:

@@ -19,14 +19,14 @@ case object Clustering {
   // an iterator over the clusters (in the example above: [1,2,3],[4,5])
   // but an iteratover over the representatives of each node, i.e.
   // something similar to [1->1, 2->1, 3->1, 4->4, 5->4]
-  def getClusters(set_of_sets: Set[Set[Int]]): Iterator[Result] = {
+  def getClusters(tx_inputs: Iterator[Iterable[Int]]): Iterator[Result] = {
     val mapper = UnionFind(Map.empty)
-    val am = doGrouping(mapper, set_of_sets.toIterator)
+    val am = doGrouping(mapper, tx_inputs)
     am.collect
   }
 
   @tailrec
-  private def doGrouping(am: UnionFind, inputs: Iterator[Set[Int]]): UnionFind = {
+  private def doGrouping(am: UnionFind, inputs: Iterator[Iterable[Int]]): UnionFind = {
     if (inputs.hasNext) {
       val addresses = inputs.next()
       doGrouping(am.union(addresses), inputs)
@@ -35,17 +35,17 @@ case object Clustering {
     }
   }
 
-  def getClustersMutable(set_of_sets: Set[Set[Int]]): Iterator[Result] = {
+  def getClustersMutable(tx_inputs: Iterator[Iterable[Int]]): Iterator[Result] = {
     val mapper = UnionFindMutable(mutable.Map.empty)
-    val am = doGroupingMutable(mapper, set_of_sets.toIterator)
+    val am = doGroupingMutable(mapper, tx_inputs)
     am.collect
   }
 
   @tailrec
-  private def doGroupingMutable(am: UnionFindMutable, inputs: Iterator[Set[Int]]): UnionFindMutable = {
-    if (inputs.hasNext) {
-      val addresses = inputs.next()
-      doGroupingMutable(am.union(addresses), inputs)
+  private def doGroupingMutable(am: UnionFindMutable, tx_inputs: Iterator[Iterable[Int]]): UnionFindMutable = {
+    if (tx_inputs.hasNext) {
+      val addresses = tx_inputs.next()
+      doGroupingMutable(am.union(addresses), tx_inputs)
     } else {
       am
     }
@@ -80,7 +80,7 @@ private[common] case class UnionFind(entries: Map[Int, Representative]) {
       else find(entry.address) // look for root
     } else Representative(address, 0) // if not yet in DS, create new cluster with this element
 
-  def union(addresses: Set[Int]): UnionFind = {
+  def union(addresses: Iterable[Int]): UnionFind = {
     val representatives = addresses.map(find)
     val (highestRepresentative, exclusive) =
       representatives.tail.foldLeft((representatives.head, true)) { (b, a) =>
@@ -116,7 +116,7 @@ private[common] case class UnionFindMutable(entries: mutable.Map[Int, Representa
       }
     } else Representative(address, 0) // if not yet in DS, create new cluster with this element
 
-  def union(addresses: Set[Int]): UnionFindMutable = {
+  def union(addresses: Iterable[Int]): UnionFindMutable = {
     val representatives = addresses.map(find)
     val (highestRepresentative, exclusive) =
       representatives.tail.foldLeft((representatives.head, true)) { (b, a) =>

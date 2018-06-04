@@ -18,7 +18,7 @@ for line in fileinput.input():
             counter += 1
         e = hashes.get(h)
         n.append(e)
-    if i % 10000 == 0:
+    if i % 100000 == 0:
         print("Line {}, {} addrs so far".format(i, len(hashes)), file=sys.stderr)
     if (len(n) > 1):
         print(",".join(str(index) for index in n))
