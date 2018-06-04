@@ -18,5 +18,10 @@ Should be cleaned up at some point.
 
 ## Usage
 
-In `src/main/scala/Main.scala` all features currently supported by library are tested in a seperate function.
+In `./example_jobs/` some `.scala` files can be found which should highlight the various features of the library. 
+Currently, the following things are included:
+* `BTC.scala`: For Bitcoin, the multiple input clustering heuristic is currently implemented. There are two implementations, one using mutable DS and one using immutable DS. Usually, the mutable implementation should be faster. Each test-case has a boolean parameter `both`, which, if set to `true`, calls both implementations (may take considerably longer). The following test-cases exist:
+	* `RandomDataCluster(num_sets: Int, num_addrs: Int, max_addrs: Int, both : Boolean)`: Generates `num_sets` random transactions with `2 to max_addrs` (sampled uniformly) inputs, where the inputs are sampled from `1 to num_addrs` (again uniformly).
+	* `ClusterFile(filePath : String, both : Boolean)`: Expects a path to a text file where each line represents a transaction. Each line should contain integers, seperated by `,`, referring to the input addresses.
+	
 Until a better documentation exists, just use the examples from there.
