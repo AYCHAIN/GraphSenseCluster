@@ -1,0 +1,7 @@
+
+# intelliJ + SBT files
+.idea/*
+target/*
+project/*
+example_jobs/sample_data/*.csv
+*metastore_db*
