@@ -11,6 +11,7 @@ def time[R](msg : String = "Elapsed")(block: => R): R = {
 
 def ClusterFile(filePath : String, both : Boolean = false) = {
     println(s"Testing Address Clustering with data from $filePath")
+    //! Read data from file
     val set_of_sets = time("reading data"){
         import scala.io._
         val bufferedSource = Source.fromFile(filePath)
@@ -21,22 +22,21 @@ def ClusterFile(filePath : String, both : Boolean = false) = {
         bufferedSource.close
         set_of_sets
     }
-    // clustering
     import linking.common._
     val m2 = time("mutable"){
-        val result_iterator = Clustering.getClustersMutable(set_of_sets.toIterator)
-        // Output processing
+        //! Clustering starts here
+        val result_iterator = Clustering.getClustersMutable(set_of_sets.toIterator) //! <FUNCTION CALL
+        //! Output processing
         val representatives = result_iterator.toList
-        // representatives.foreach(println)
         val clusters = representatives
         .groupBy(_.cluster) // group by cluster identifier
         .mapValues(_.map(_.id).sorted) // map from  Map[cluster -> List[Result(id,cluster)]] to Map[cluster -> List[id]] and sort
         // println(clusters.values.map(_.size))
         clusters.values
     }
-    if(both){ // this can get really slow fast
-        val m1 = time("immutable"){
-            val result_iterator = Clustering.getClusters(set_of_sets.toIterator)
+    if(both){ //! Cluster same data with immutable-DS-clustering algorithm. This can get really slow fast
+        val m1 = time("verymutable"){
+            val result_iterator = Clustering.getClustersVeryMutable(set_of_sets.toIterator)
             // Output processing
             val representatives = result_iterator.toList
             // representatives.foreach(println)
@@ -93,5 +93,8 @@ def RandomDataCluster(num_sets: Int = 100000, num_addrs: Int = 100000, max_addrs
   }
 
 RandomDataCluster(100,100,3, true)
-val filePath = "./sample_data/btc100K.csv"
-ClusterFile(filePath, true)
+val filePath4 = "./sample_data/tx_inputs.1E4.csv"
+val filePath5 = "./sample_data/tx_inputs.1E5.csv"
+val filePath6 = "./sample_data/tx_inputs.1E6.csv"
+val filePath7 = "./sample_data/tx_inputs.1E7.csv"
+ClusterFile(filePath5, true)

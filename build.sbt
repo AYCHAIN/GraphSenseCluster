@@ -23,9 +23,9 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion
 ,  "org.apache.spark" %% "spark-sql" % sparkVersion  // % "compile" withSources()
 ,  "org.apache.spark" %% "spark-streaming" % sparkVersion
-// ,  "org.apache.spark" % "spark-streaming-twitter_2.11" % sparkVersion
 )
-
+// libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.4" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
 // Here, `libraryDependencies` is a set of dependencies, and by using `+=`,
 // we're adding the cats dependency to the set of dependencies that sbt will go

@@ -22,3 +22,6 @@ for line in fileinput.input():
         print("Line {}, {} addrs so far".format(i, len(hashes)), file=sys.stderr)
     if (len(n) > 1):
         print(",".join(str(index) for index in n))
+with open('hashes.csv','w') as hashfile:
+    for (k,v) in hashes.items():
+        hashfile.write("{},{}\n".format(k,v))

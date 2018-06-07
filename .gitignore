@@ -4,4 +4,6 @@
 target/*
 project/*
 example_jobs/sample_data/*.csv
+example_jobs/project/*
+example_jobs/target/*
 *metastore_db*
