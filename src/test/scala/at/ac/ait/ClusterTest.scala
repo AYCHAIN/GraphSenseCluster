@@ -15,7 +15,7 @@ class StackSpec extends FlatSpec {
   "Merging 123, 456, 789 and 34" should "result in two Clusters of size 6 and 3" in {
     val input_sets = Set(Set(1, 2, 3),Set(4, 5, 6),Set(7, 8, 9),Set(3, 4))
     // Clustering:
-    val result_iterator = Clustering.getClusters(input_sets.toIterator)
+    val result_iterator = Clustering.getClustersImmutable(input_sets.toIterator)
     // Output processing
     val representatives = result_iterator.toList
     // representatives.foreach(println)
@@ -57,7 +57,7 @@ class StackSpec extends FlatSpec {
       clusters.values
     }
     val (t_immutable, result_immutable) = time("immutable"){
-      val result_iterator = Clustering.getClusters(data.toIterator)
+      val result_iterator = Clustering.getClustersImmutable(data.toIterator)
       val clusters = result_iterator.toList
       .groupBy(_.cluster)
       .mapValues(_.map(_.id).sorted)

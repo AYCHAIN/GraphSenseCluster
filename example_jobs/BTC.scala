@@ -35,8 +35,8 @@ def ClusterFile(filePath : String, both : Boolean = false) = {
         clusters.values
     }
     if(both){ //! Cluster same data with immutable-DS-clustering algorithm. This can get really slow fast
-        val m1 = time("verymutable"){
-            val result_iterator = Clustering.getClustersVeryMutable(set_of_sets.toIterator)
+        val m1 = time("immutable"){
+            val result_iterator = Clustering.getClustersImmutable(set_of_sets.toIterator)
             // Output processing
             val representatives = result_iterator.toList
             // representatives.foreach(println)
@@ -53,18 +53,18 @@ def ClusterFile(filePath : String, both : Boolean = false) = {
 def RandomDataCluster(num_sets: Int = 100000, num_addrs: Int = 100000, max_addrs: Int = 15, both : Boolean = false) {
     println("Testing Address Clustering with random data:")
     // Some Testdata
-    val input_sets = Set(Set(1, 2, 3),Set(4, 5, 6),Set(7, 8, 9),Set(3, 4)).toIterator
+    val input_sets = Set(Set(1, 2, 3),Set(4, 5, 6),Set(7, 8, 9),Set(3, 4))
     // More test data, randomly generated
     val r = scala.util.Random
     val more_sets = (1 to num_sets) // 
         .map(_ => 1 to (2 + r.nextInt(max_addrs -2))) // number of elements 
         .map(x => x.map(_ => r.nextInt(num_addrs)).toSet).toSet // map to addrs
-        .toIterator
+
 
     // Clustering:
     import linking.common._
     val m2 = time("mutable"){
-        val result_iterator = Clustering.getClustersMutable(more_sets)
+        val result_iterator = Clustering.getClustersMutable(more_sets.toIterator)
         // Output processing
         val representatives = result_iterator.toList
         // representatives.foreach(println)
@@ -74,9 +74,9 @@ def RandomDataCluster(num_sets: Int = 100000, num_addrs: Int = 100000, max_addrs
         println(clusters.values.map(_.size))
         clusters.values
     }
-    if(both){ // this can get really slow fast
+    if(both){ // this can get slow
         val m1 = time("immutable"){
-            val result_iterator = Clustering.getClusters(more_sets)
+            val result_iterator = Clustering.getClustersImmutable(more_sets.toIterator)
             // Output processing
             val representatives = result_iterator.toList
             // representatives.foreach(println)
@@ -88,7 +88,7 @@ def RandomDataCluster(num_sets: Int = 100000, num_addrs: Int = 100000, max_addrs
         }
         // println(m1)
         // println(m2)
-        println("Difference between clusters: " + (m1.toSet diff m2.toSet).size)
+        println("Difference between clusters: " + ((m2.toSet diff m1.toSet).size + (m1.toSet diff m2.toSet).size))
     }
   }
 

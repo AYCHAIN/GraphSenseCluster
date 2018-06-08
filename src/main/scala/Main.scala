@@ -20,7 +20,7 @@ object Main extends App {
 
     // Clustering:
     import linking.common._
-    val result_iterator = Clustering.getClusters(input_sets)
+    val result_iterator = Clustering.getClustersImmutable(input_sets)
 
     // Output processing
     val representatives = result_iterator.toList

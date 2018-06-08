@@ -1,1 +1,0 @@
-spark-shell --jars ../target/scala-2.11/linking_2.11-1.0.jar
