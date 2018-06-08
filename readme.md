@@ -11,10 +11,21 @@ Work in progress.
 ```
 libraryDependencies += "at.ac.ait" %% "linking" % "1.0"
 ```
-* Import the stuff related to clustering with `import linking.common._`
-* Bring your data into the form `Iterator[Iterable[A]]`, where each `Iterable[A]` is some collection of items that should be grouped together. 
-* Call `Clustering.getClustersMutable(data)` or `Clustering.getClustersImmutable(data)`. The result is an `Iterator[Result[A]]`, where each `Result[A]` has the fields `id: A` and `cluster: A`. 
+* Applying multi-input-heuristic for e.g. Bitcoin:
+	* Import the stuff related to clustering with `import linking.common._`
+	* Bring your data into the form `Iterator[Iterable[A]]`, where each `Iterable[A]` is some collection of items that should be grouped together. 
+	* Call `Clustering.getClustersMutable(data)` or `Clustering.getClustersImmutable(data)`. The result is an `Iterator[Result[A]]`, where each `Result[A]` has the fields `id: A` and `cluster: A`.
 
+*Note*: While using the addresses works in theory, assigning a unique integer to each address and using those IDs instead would improve the performance (by a more or less constant factor).
+Example with randomly generated transactions (random integers) and the same dataset, but using the SHA256 hash of the integers  instead:
+
+```
+> RandomDataCluster(1000000,2000000,15,true)
+>> Testing Address Clustering with 1000000 random TXs with 2-15 inputs:
+>> Integer ID Clustering time: 13s
+>> SHA256 Clustering time: 18s
+>> Difference between clusters: 0
+```
 
 ### Examples
 In `./example_jobs/` some `.scala` files can be found which should show how to use the library.

@@ -50,8 +50,8 @@ def ClusterFile(filePath : String, both : Boolean = false) = {
     }
 }
 
-def RandomDataCluster(num_sets: Int = 100000, num_addrs: Int = 100000, max_addrs: Int = 15, both : Boolean = false) {
-    println("Testing Address Clustering with random data:")
+def RandomDataCluster(num_sets: Int = 100000, num_addrs: Int = 100000, max_addrs: Int = 15, both : Boolean = true) {
+    println(s"Testing Address Clustering with $num_sets random TXs with 2-$max_addrs inputs:")
     // Some Testdata
     val input_sets = Set(Set(1, 2, 3),Set(4, 5, 6),Set(7, 8, 9),Set(3, 4))
     // More test data, randomly generated
@@ -59,11 +59,12 @@ def RandomDataCluster(num_sets: Int = 100000, num_addrs: Int = 100000, max_addrs
     val more_sets = (1 to num_sets) // 
         .map(_ => 1 to (2 + r.nextInt(max_addrs -2))) // number of elements 
         .map(x => x.map(_ => r.nextInt(num_addrs)).toSet).toSet // map to addrs
-
+    def sha256Hash(text: String) : String = String.format("%064x", new java.math.BigInteger(1, java.security.MessageDigest.getInstance("SHA-256").digest(text.getBytes("UTF-8"))))
+    val string_sets = more_sets.map(_.map(a => sha256Hash(a.toString))) // should work as well
 
     // Clustering:
     import linking.common._
-    val m2 = time("mutable"){
+    val m2 = time("Integer ID Clustering"){
         val result_iterator = Clustering.getClustersMutable(more_sets.toIterator)
         // Output processing
         val representatives = result_iterator.toList
@@ -71,20 +72,20 @@ def RandomDataCluster(num_sets: Int = 100000, num_addrs: Int = 100000, max_addrs
         val clusters = representatives
         .groupBy(_.cluster) // group by cluster identifier
         .mapValues(_.map(_.id).sorted) // map from  Map[cluster -> List[Result(id,cluster)]] to Map[cluster -> List[id]] and sort
-        println(clusters.values.map(_.size))
-        clusters.values
-    }
+        // println(clusters.values.map(_.size))
+        clusters.values.map(_.size)
+}
     if(both){ // this can get slow
-        val m1 = time("immutable"){
-            val result_iterator = Clustering.getClustersImmutable(more_sets.toIterator)
+        val m1 = time("SHA256 Clustering"){
+            val result_iterator = Clustering.getClustersMutable(string_sets.toIterator)
             // Output processing
             val representatives = result_iterator.toList
             // representatives.foreach(println)
             val clusters = representatives
             .groupBy(_.cluster) // group by cluster identifier
             .mapValues(_.map(_.id).sorted) // map from  Map[cluster -> List[Result(id,cluster)]] to Map[cluster -> List[id]] and sort
-            println(clusters.values.map(_.size))
-            clusters.values
+            // println(clusters.values.map(_.size))
+            clusters.values.map(_.size)
         }
         // println(m1)
         // println(m2)
