@@ -17,6 +17,7 @@ val data_iterator = dataSet.collect().iterator // first collect and then call it
 
 
 // Clustering happens here. Result is an iterator, if you want to save results use .toList or similar
-val clusterData = Clustering.getClustersMutable(data_iterator)
-
+val clusterData = Clustering.getClustersMutable(data_iterator).toList
 clusterData.foreach(println)
+
+val clusterDS = clusterData.toDS()
