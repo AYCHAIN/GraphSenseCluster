@@ -35,7 +35,8 @@ Currently, the following things are included:
 	* `RandomDataCluster(num_sets: Int, num_addrs: Int, max_addrs: Int, both : Boolean)`: Generates `num_sets` random transactions with `2 to max_addrs` (sampled uniformly) inputs, where the inputs are sampled from `1 to num_addrs` (again uniformly). If `both` is set to true, it maps all integers to SHA256 addresses and also runs the clustering algorithm on this modified dataset. 
 	* `ClusterFile(filePath : String, both : Boolean)`: Expects a path to a text file where each line represents the set of inputs to a transaction (one or multiple integers, seperated by `,`). If the parameter `both` is set to true, not only the mutable but also the immutable clustering algorithm are ran and their runtimes and results are compared.
 * [`Spark-BTC.scala`](https://github.com/graphsense/graphsense-clustering/blob/master/example_jobs/Spark-BTC.scala): Showcases, how this library would be used in a spark-job. Basically
-```import linking.common._
+```
+import linking.common._
 val data_iterator = dataSet.collect().iterator // collect and call iterator
 val clusterDataSet = Clustering.getClustersMutable(data_iterator).toList.toDS()
 ```
