@@ -42,6 +42,21 @@ Showcases, how this library would be used in a spark-job. Basically
 import linking.common._
 val data_iterator = dataSet.collect().iterator // collect and call iterator
 val clusterDataSet = Clustering.getClustersMutable(data_iterator).toList.toDS()
+clusterDataSet.show()
+     +---+-------+
+     | id|cluster|
+     +---+-------+
+     |  8|      7|
+     |  2|      1|
+     |  5|      1|
+     |  4|      1|
+     |  7|      7|
+     |  1|      1|
+     |  9|      7|
+     |  3|      1|
+     |  6|      1|
+     +---+-------+
+
 ```
 Algorithm runs locally, so make sure that your machine does not explode when calling `collect()` (or at any other point).
 

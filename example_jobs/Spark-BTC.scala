@@ -21,3 +21,4 @@ val clusterData = Clustering.getClustersMutable(data_iterator).toList
 clusterData.foreach(println)
 
 val clusterDS = clusterData.toDS()
+clusterDS.show()
