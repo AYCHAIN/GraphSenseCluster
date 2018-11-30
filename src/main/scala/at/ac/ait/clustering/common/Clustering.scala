@@ -4,7 +4,7 @@ import scala.collection.mutable
 
 // If common is imported, this object should be used to cluster addresses.
 // There are two implementations, one uses mutable DS and the other does not.
-// Most likely, the mutable implementation is faster, though this has to be tested in production first. 
+// Most likely, the mutable implementation is faster, though this has to be tested in production first.
 // Usage:
 //   val input_sets = Set(Set(1,2),Set(2,3), Set(4,5))
 //   val result = Clustering.getClusters(input_sets.toIterator) OR
@@ -48,22 +48,21 @@ case object Clustering {
 //   id:      Address of node
 //   cluster: Address of representative of this node
 case class Result[A](id: A, cluster: A) {
-	override def toString() : String = s"$id -> $cluster"
+  override def toString(): String = s"$id -> $cluster"
 }
 
 // For each element in UF-DS an instance of Representative is stored that refers to the root of the cluster
 //   address: The representative of the element. If the "owner" has the same address, he's the root of the cluster
 //   height:  Union by rank/size is used to always add the smaller to the larger
 //            This prevents degeneration to linear (instead of logarithmic) lists
-private[common] case class Representative[A](address: A, height: Byte){
+private[common] case class Representative[A](address: A, height: Byte) {
   def apply(exclusive: Boolean) = {
-    if (exclusive) Representative[A](this.address, (this.height+1).toByte)
+    if (exclusive) Representative[A](this.address, (this.height + 1).toByte)
     else this
   }
 }
 
-
-trait UnionFind[A]{
+trait UnionFind[A] {
   def find(address: A): Representative[A]
   def union(addresses: Iterable[A]): UnionFind[A]
   def collect: Iterator[Result[A]]
@@ -87,7 +86,7 @@ private[common] case class UnionFindImmutable[A](entries: Map[A, Representative[
       }
     val setRepresentative = highestRepresentative(exclusive)
     // val newEntries = representatives.map(r => (find(r.address).address,setRepresentative)) // find not needed as all r are already representatives
-    val newEntries = representatives.map(r => (r.address,setRepresentative))
+    val newEntries = representatives.map(r => (r.address, setRepresentative))
     UnionFindImmutable(entries ++ newEntries)
   }
 
@@ -103,9 +102,9 @@ private[common] case class UnionFindMutable[A](entries: mutable.Map[A, Represent
       val entry = entries(address)
       if (entry.address == address) {
         entry // if root of cluster is found
-      } else  {
+      } else {
         val root = find(entry.address) // look for root
-        entries.put(address,root)
+        entries.put(address, root)
         root
       }
     } else Representative[A](address, 0) // if not yet in DS, create new cluster with this element
@@ -118,12 +117,12 @@ private[common] case class UnionFindMutable[A](entries: mutable.Map[A, Represent
         else if (b._1.height == a.height) (b._1, false)
         else (a, true)
       }
-      
+
     val height =
       if (exclusive) highestRepresentative.height
       else (highestRepresentative.height + 1).toByte
     val representative = Representative[A](highestRepresentative.address, height)
-    representatives.foreach(r=>{entries.put(r.address,representative)})
+    representatives.foreach(r => { entries.put(r.address, representative) })
     this
   }
   def collect = {
