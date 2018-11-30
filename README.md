@@ -1,31 +1,36 @@
-# `linking` Library
-This folder contains several scala implementations of algorithms/heuristics that are used for linking transactions of cryptocurrencies.
-Work in progress.
+# A library implementing cryptocurrency clustering algorithms
+
+This folder contains several Scala implementations of algorithms/heuristics that are used for linking cryptocurrency transactions.
+
+
+## Prerequistes
+
+Make sure [sbt > 1.0][scala-sbt] is installed:
+
+    sbt about
+
+## Building and Packaging
+
+Package the library
+
+     sbt package
+
+Publish the packed library into your local repository
+
+     sbt publishLocal
 
 ## Usage
 
-* Start `sbt` in the root directory of this repository
-* Enter `package` to create a jar
-* Enter `publishLocal` to use the library from other projects on the current machine
-* Add a reference to this package to the `build.sbt` file of your project by adding something along the line of
+Add a reference to this package to the `build.sbt` file of your project by adding something along the line of
+
 ```
-libraryDependencies += "at.ac.ait" %% "linking" % "1.0"
+libraryDependencies += "at.ac.ait" %% "graphsense-clustering" % "0.3.3"
 ```
-* Applying multi-input-heuristic for e.g. Bitcoin:
+
+* Applying multi-input-heuristic for e.g., Bitcoin:
 	* Import the stuff related to clustering with `import linking.common._`
 	* Bring your data into the form `Iterator[Iterable[A]]`, where each `Iterable[A]` is some collection of items that should be grouped together. 
 	* Call `Clustering.getClustersMutable(data)` or `Clustering.getClustersImmutable(data)`. The result is an `Iterator[Result[A]]`, where each `Result[A]` has the fields `id: A` and `cluster: A`.
-
-*Note*: While using the addresses works in theory, assigning a unique integer to each address and using those IDs instead would improve the performance (by a more or less constant factor).
-Example with randomly generated transactions (random integers) and the same dataset, but using the SHA256 hash of the integers  instead:
-
-```
-> RandomDataCluster(1000000,2000000,15,true)
->> Testing Address Clustering with 1000000 random TXs with 2-15 inputs:
->> Integer ID Clustering time: 13s
->> SHA256 Clustering time: 18s
->> Difference between clusters: 0
-```
 
 ### Example Jobs
 In `./example_jobs/` some `.scala` files can be found which should show how to use the library.
@@ -61,6 +66,7 @@ clusterDataSet.show()
 Algorithm runs locally, so make sure that your machine does not explode when calling `collect()` (or at any other point).
 
 ## Planned features
+
 * common:
 	* Address clustering (multi-input heuristic)
 		* TODO: Add ['clustering safeguards'](http://bitfury.com/content/downloads/clustering_whitepaper.pdf)
@@ -68,3 +74,7 @@ Algorithm runs locally, so make sure that your machine does not explode when cal
 	* 0-Mixin removal
 * zec:
 	* Round Trip Transaction in/out of shielded pool ([Quesnelle, 2017](https://arxiv.org/abs/1712.01210))
+
+
+
+[scala-sbt]: http://www.scala-sbt.org

@@ -1,5 +1,6 @@
 package at.ac.ait
-import linking.common._
+
+import at.ac.ait.clustering.common._
 import org.scalatest.FlatSpec
 import org.scalatest._
 
