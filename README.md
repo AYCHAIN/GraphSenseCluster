@@ -23,9 +23,7 @@ Publish the packed library into your local repository
 
 Add a reference to this package to the `build.sbt` file of your project by adding
 
-```
     libraryDependencies += "at.ac.ait" %% "graphsense-clustering" % "0.3.3"
-```
 
 Applying multi-input-heuristic for e.g., Bitcoin:
 
