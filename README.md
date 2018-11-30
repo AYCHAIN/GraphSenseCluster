@@ -1,7 +1,6 @@
 # A library implementing cryptocurrency clustering algorithms
 
-This folder contains several Scala implementations of algorithms/heuristics that are used for linking cryptocurrency transactions.
-
+This repository contains several Scala implementations of algorithms/heuristics that are used for linking cryptocurrency transactions.
 
 ## Prerequistes
 
@@ -21,7 +20,7 @@ Publish the packed library into your local repository
 
 ## Usage
 
-Add a reference to this package to the `build.sbt` file of your project by adding something along the line of
+Add a reference to this package to the `build.sbt` file of your project by adding
 
 ```
      libraryDependencies += "at.ac.ait" %% "graphsense-clustering" % "0.3.3"
