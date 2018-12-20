@@ -1,4 +1,4 @@
-package at.ac.ait.clustering.common
+package at.ac.ait.clustering
 import scala.annotation.tailrec
 import scala.collection.mutable
 
@@ -15,7 +15,7 @@ import scala.collection.mutable
 //        Result(3,1)
 //        Result(4,4)
 //        Result(5,4)
-case object Clustering {
+case object MultipleInputClustering {
   def getClustersImmutable[A](tx_inputs: Iterator[Iterable[A]]): Iterator[Result[A]] = {
     val mapper = UnionFindImmutable[A](Map.empty)
     val am = doGrouping(mapper, tx_inputs)
@@ -55,7 +55,7 @@ case class Result[A](id: A, cluster: A) {
 //   address: The representative of the element. If the "owner" has the same address, he's the root of the cluster
 //   height:  Union by rank/size is used to always add the smaller to the larger
 //            This prevents degeneration to linear (instead of logarithmic) lists
-private[common] case class Representative[A](address: A, height: Byte) {
+private[clustering] case class Representative[A](address: A, height: Byte) {
   def apply(exclusive: Boolean) = {
     if (exclusive) Representative[A](this.address, (this.height + 1).toByte)
     else this
@@ -68,7 +68,7 @@ trait UnionFind[A] {
   def collect: Iterator[Result[A]]
 }
 
-private[common] case class UnionFindImmutable[A](entries: Map[A, Representative[A]]) extends UnionFind[A] {
+private[clustering] case class UnionFindImmutable[A](entries: Map[A, Representative[A]]) extends UnionFind[A] {
   def find(address: A): Representative[A] =
     if (entries.contains(address)) {
       val entry = entries(address)
@@ -96,7 +96,7 @@ private[common] case class UnionFindImmutable[A](entries: Map[A, Representative[
   }
 }
 
-private[common] case class UnionFindMutable[A](entries: mutable.Map[A, Representative[A]]) extends UnionFind[A] {
+private[clustering] case class UnionFindMutable[A](entries: mutable.Map[A, Representative[A]]) extends UnionFind[A] {
   def find(address: A): Representative[A] =
     if (entries.contains(address)) {
       val entry = entries(address)

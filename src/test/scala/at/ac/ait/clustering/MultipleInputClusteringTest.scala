@@ -1,13 +1,14 @@
-package at.ac.ait
+package at.ac.ait.clustering
 
-import at.ac.ait.clustering.common._
 import org.scalatest.FlatSpec
 import org.scalatest._
+import org.scalactic.source.Position.apply
+import scala.collection.Seq
 
-class ClusteringTestSpec extends FlatSpec {
+class MultipleInputClusteringTestSpec extends FlatSpec {
 
   def computeClusters(inputs: Iterable[Iterable[Int]]) = {
-    val results = Clustering.getClustersMutable(inputs.toIterator).toSet
+    val results = MultipleInputClustering.getClustersMutable(inputs.toIterator).toSet
     (inputs.flatten.toSet, results.map(_.id).toSet, results.map(_.cluster).toSet)    
   }
   
@@ -32,7 +33,6 @@ class ClusteringTestSpec extends FlatSpec {
     assert(resultClusterIds.size == 1)    
   }
   
-  
   "Five input sets with one intersection" should "yield four clusters" in {
     val inputs = Set(Set(1), Set(2), Set(3), Set(4), Set(4, 5))
     val (inputIds, resultIds, resultClusterIds) = computeClusters(inputs)
@@ -43,7 +43,7 @@ class ClusteringTestSpec extends FlatSpec {
   "Merging 123, 456, 789 and 34" should "result in two clusters of size 6 and 3" in {
     val input_sets = Set(Set(1, 2, 3), Set(4, 5, 6), Set(7, 8, 9), Set(3, 4))
     // Clustering:
-    val results = Clustering.getClustersImmutable(input_sets.toIterator).toSet
+    val results = MultipleInputClustering.getClustersImmutable(input_sets.toIterator).toSet
     val clusters = results
       .groupBy(_.cluster) // group by cluster identifier
       .mapValues(_.map(_.id)) // map from  Map[cluster -> List[Result(id,cluster)]] to Map[cluster -> List[id]]      
@@ -83,14 +83,14 @@ class ClusteringTestSpec extends FlatSpec {
     val data = generateTestData(TESTSIZE, TESTSIZE, 5)
 
     val (t_mutable, result_mutable) = time("mutable") {
-      val result_iterator = Clustering.getClustersMutable(data.toIterator)
+      val result_iterator = MultipleInputClustering.getClustersMutable(data.toIterator)
       val clusters = result_iterator.toList
         .groupBy(_.cluster)
         .mapValues(_.map(_.id).sorted)
       clusters.values
     }
     val (t_immutable, result_immutable) = time("immutable") {
-      val result_iterator = Clustering.getClustersImmutable(data.toIterator)
+      val result_iterator = MultipleInputClustering.getClustersImmutable(data.toIterator)
       val clusters = result_iterator.toList
         .groupBy(_.cluster)
         .mapValues(_.map(_.id).sorted)
